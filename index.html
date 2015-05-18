@@ -49,11 +49,36 @@
         }
       })
       var CommentBox = React.createClass({
+        getInitialState: function() {
+            return {data: []};
+        },
+        loadCommentsFromServer: function() {
+            debugger;
+            $.ajax({
+                url: this.props.url,
+        //        dataType: 'json',
+                cache: false,
+                success: function(data){
+                    this.setState({data: data});
+                }.bind(this),
+                error: function(xhr, status, err) {
+                    console.error(this.props.url, status, err.toString());
+                }.bind(this),
+                crossDomain: true,
+                xhrFields: {
+                    withCredentials: true,
+                }
+            })
+        },
+        componentDidMount: function() {
+            this.loadCommentsFromServer();
+            setInterval(this.loadCommentsFromServer, this.props.pollInterval);
+        },
         render: function() {
           return (
             <div className="commentBox">
               <h1>Hello, world! I am a CommentBox.</h1>
-              <CommentList data={this.props.data} />
+              <CommentList data={this.state.data} />
               <CommentForm />
             </div>
           );
@@ -64,7 +89,7 @@
         {author: "Jordan Walke", text: "This is *another* comment"}
       ];
       React.render(
-      <CommentBox data={data}/>,
+      <CommentBox  url='http://amfarrell.com:3000/comments.json' pollInterVal={20000}/>,
         document.getElementById('content')
       );
     </script>
