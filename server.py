@@ -11,8 +11,11 @@
 import json
 import os
 from flask import Flask, Response, request
+from flask.ext.cors import CORS
 
 app = Flask(__name__, static_url_path='', static_folder='public')
+cors = CORS(app)
+
 app.add_url_rule('/', 'root', lambda: app.send_static_file('index.html'))
 
 @app.route('/comments.json', methods=['GET', 'POST'])
@@ -27,6 +30,7 @@ def comments_handler():
         with open('comments.json', 'w') as file:
             file.write(json.dumps(comments, indent=4, separators=(',', ': ')))
 
+    print(comments)
     return Response(json.dumps(comments), mimetype='application/json', headers={'Cache-Control': 'no-cache'})
 
 if __name__ == '__main__':
