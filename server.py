@@ -11,10 +11,8 @@
 import json
 import os
 from flask import Flask, Response, request
-from flask.ext.cors import CORS
 
 app = Flask(__name__, static_url_path='', static_folder='public')
-cors = CORS(app)
 
 app.add_url_rule('/', 'root', lambda: app.send_static_file('index.html'))
 
@@ -31,7 +29,10 @@ def comments_handler():
             file.write(json.dumps(comments, indent=4, separators=(',', ': ')))
 
     print(comments)
-    return Response(json.dumps(comments), mimetype='application/json', headers={'Cache-Control': 'no-cache'})
+    return Response(json.dumps(comments), mimetype='application/json', headers={
+        'Cache-Control': 'no-cache',
+        'Access-Control-Allow-Origin':'http://amfarrell.com',
+        })
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get("PORT",3000)))
