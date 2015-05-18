@@ -53,7 +53,6 @@
             return {data: []};
         },
         loadCommentsFromServer: function() {
-            debugger;
             $.ajax({
                 url: this.props.url,
         //        dataType: 'json',
@@ -65,9 +64,6 @@
                     console.error(this.props.url, status, err.toString());
                 }.bind(this),
                 crossDomain: true,
-                xhrFields: {
-                    withCredentials: true,
-                }
             })
         },
         componentDidMount: function() {
